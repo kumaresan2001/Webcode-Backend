@@ -92,7 +92,7 @@ app.post("/Contacts", async (req, res) => {
   }
 });
 
-app.post("/postProducts", async (req, res) => {
+app.post("/Products", async (req, res) => {
   try {
     const connection = await mongoclient.connect();
     const db = connection.db(DB);
@@ -124,7 +124,7 @@ app.get("/Products/:id", async (req, res) => {
     const db = connection.db(DB);
     const product = await db
       .collection("products")
-      .findOne({ _id: mongodb.ObjectId(req.params.productId) });
+      .findOne({ _id: new mongodb.ObjectId(req.params.productId) });
 
     if (product) {
       res.json(product);
@@ -144,12 +144,12 @@ app.delete("/Products/:id", async (req, res) => {
     const db = connection.db(DB);
     const productData = await db
       .collection("products")
-      .findOne({ _id: mongodb.ObjectId(req.params.id) });
+      .findOne({ _id: new mongodb.ObjectId(req.params.id) });
     res.json(productData);
     if (productData) {
       const product = await db
         .collection("products")
-        .deleteOne({ _id: mongodb.ObjectId(req.params.id) });
+        .deleteOne({ _id: new mongodb.ObjectId(req.params.id) });
       res.json(product);
       await connection.close();
     } else {
