@@ -1,21 +1,15 @@
 import express from "express";
-
 import cors from "cors";
 import mongodb from "mongodb";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-// require("dotenv").config();
-
 import * as dotenv from "dotenv";
 dotenv.config();
+
 const app = express();
 app.use(express.json());
 app.use(cors());
-// app.use(
-//   cors({
-//     origin: "http://localhost:5000",
-//   })
-// );
+
 const URL = process.env.LINK;
 const DB = process.env.DB;
 const jwt_secret = process.env.jwt_secret;
@@ -114,7 +108,7 @@ app.get("/Products", async (req, res) => {
   try {
     const connection = await mongoclient.connect();
     const db = connection.db(DB);
-    const Products = await db.collection("products").find({}).toArray();
+    const Products = await db.collection("products").find().toArray();
     res.json(Products);
     await connection.close();
   } catch (error) {
@@ -173,7 +167,7 @@ app.get("/Product/:id", async (req, res) => {
     const db = connection.db(DB);
     const Products = await db
       .collection("products")
-      .findOne({ _id: mongodb.ObjectId(req.params.id) });
+      .findOne({ _id: new mongodb.ObjectId(req.params.id) });
     res.json(Products);
     await connection.close();
   } catch (error) {
@@ -188,7 +182,7 @@ app.put("/Products/:id", async (req, res) => {
     const db = connection.db(DB);
     const productData = await db
       .collection("products")
-      .findOne({ _id: mongodb.ObjectId(req.params.id) });
+      .findOne({ _id: new mongodb.ObjectId(req.params.id) });
 
     if (productData) {
       delete req.body._id;
@@ -215,7 +209,7 @@ app.post("/hours/:id", async (req, res) => {
     const db = connection.db(DB);
     const Products = await db
       .collection("products")
-      .findOne({ _id: mongodb.ObjectId(req.params.id) });
+      .findOne({ _id: new mongodb.ObjectId(req.params.id) });
     var date1 = new Date(req.body.startDate);
     var date2 = new Date(req.body.endDate);
     var hours = (date2 - date1) / (1000 * 3600);
