@@ -1,23 +1,25 @@
-const express = require("express");
+import express from "express";
+
+import cors from "cors";
+import mongodb from "mongodb";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+// require("dotenv").config();
+
+import * as dotenv from "dotenv";
+dotenv.config();
 const app = express();
-const cors = require("cors");
-const mongodb = require("mongodb");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
+app.use(express.json());
+app.use(cors());
+// app.use(
+//   cors({
+//     origin: "http://localhost:5000",
+//   })
+// );
 const URL = process.env.LINK;
 const DB = process.env.DB;
 const jwt_secret = process.env.jwt_secret;
 const mongoclient = new mongodb.MongoClient(URL);
-
-app.use(express.json());
-
-app.use(
-  cors({
-    origin: "http://localhost:5000",
-  })
-);
-
 app.get("/", function (req, res) {
   res.send("<h1>Equipment rental portal Project...</h1>");
 });
