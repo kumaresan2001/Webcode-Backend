@@ -108,7 +108,7 @@ app.get("/Products", async (req, res) => {
   try {
     const connection = await mongoclient.connect();
     const db = connection.db(DB);
-    const Products = await db.collection("products").find(req).toArray();
+    const Products = await db.collection("products").find({}).toArray();
     res.json(Products);
     await connection.close();
   } catch (error) {
