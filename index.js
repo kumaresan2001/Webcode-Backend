@@ -1,4 +1,4 @@
-import express from "express";
+import express, { query } from "express";
 import cors from "cors";
 import mongodb from "mongodb";
 import bcrypt from "bcryptjs";
@@ -79,18 +79,18 @@ app.post("/admin/login", async (req, res) => {
   }
 });
 
-app.post("/Contacts", async (req, res) => {
-  try {
-    const connection = await mongoclient.connect();
-    const db = connection.db(DB);
-    const contact = await db.collection("contacts").insertOne(req.body);
-    await connection.close();
-    res.json(contact);
-  } catch (error) {
-    console.log(error);
-    res.json({ message: "something Went Wrong" });
-  }
-});
+// app.post("/Contacts", async (req, res) => {
+//   try {
+//     const connection = await mongoclient.connect();
+//     const db = connection.db(DB);
+//     const contact = await db.collection("contacts").insertOne(req.body);
+//     await connection.close();
+//     res.json(contact);
+//   } catch (error) {
+//     console.log(error);
+//     res.json({ message: "something Went Wrong" });
+//   }
+// });
 
 app.post("/Products", async (req, res) => {
   try {
@@ -108,7 +108,7 @@ app.get("/Products", async (req, res) => {
   try {
     const connection = await mongoclient.connect();
     const db = connection.db(DB);
-    const Products = await db.collection("products").find({}).toArray();
+    const Products = await db.collection("products").find(req.query).toArray();
     res.json(Products);
     await connection.close();
   } catch (error) {
@@ -144,7 +144,7 @@ app.delete("/Products/:id", async (req, res) => {
     const db = connection.db(DB);
     const productData = await db
       .collection("products")
-      .findOne({ _id: new mongodb.ObjectId(req.params.id) });
+      .findOne({ _id: mongodb.ObjectId(req.params.id) });
     res.json(productData);
     if (productData) {
       const product = await db
@@ -182,7 +182,7 @@ app.put("/Products/:id", async (req, res) => {
     const db = connection.db(DB);
     const productData = await db
       .collection("products")
-      .findOne({ _id: new mongodb.ObjectId(req.params.id) });
+      .findOne({ _id: mongodb.ObjectId(req.params.id) });
 
     if (productData) {
       delete req.body._id;
