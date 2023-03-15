@@ -30,7 +30,7 @@ app.post("/admin/register", async (req, res) => {
 
     // Select Collection
     // Do operation (CRUD)
-    await db.collection("admin").insertOne(req.body);
+    await db.collection("movies").insertOne(req.body);
 
     res.json({ message: "Admin created Sucessfully" });
 
@@ -53,7 +53,7 @@ app.post("/admin/login", async (req, res) => {
     // Select Collection
     // Do operation (CRUD)
     const admin = await db
-      .collection("admin")
+      .collection("movies")
       .findOne({ email: req.body.email });
     if (admin) {
       const compare = await bcrypt.compare(req.body.password, admin.password);
@@ -144,7 +144,7 @@ app.delete("/Products/:id", async (req, res) => {
     const db = connection.db(DB);
     const productData = await db
       .collection("products")
-      .findOne({ _id: mongodb.ObjectId(req.params.id) });
+      .findOne({ _id: new mongodb.ObjectId(req.params.id) });
     res.json(productData);
     if (productData) {
       const product = await db
@@ -182,14 +182,14 @@ app.put("/Products/:id", async (req, res) => {
     const db = connection.db(DB);
     const productData = await db
       .collection("products")
-      .findOne({ _id: mongodb.ObjectId(req.params.id) });
+      .findOne({ _id: new mongodb.ObjectId(req.params.id) });
 
     if (productData) {
       delete req.body._id;
       const product = await db
         .collection("products")
         .updateOne(
-          { _id: mongodb.ObjectId(req.params.id) },
+          { _id: new mongodb.ObjectId(req.params.id) },
           { $set: req.body }
         );
       res.json(product);
