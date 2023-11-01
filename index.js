@@ -30,7 +30,7 @@ app.post("/admin/register", async (req, res) => {
 
     // Select Collection
     // Do operation (CRUD)
-    await db.collection("movies").insertOne(req.body);
+    await db.collection("rental").insertOne(req.body);
 
     res.json({ message: "Admin created Sucessfully" });
 
@@ -53,7 +53,7 @@ app.post("/admin/login", async (req, res) => {
     // Select Collection
     // Do operation (CRUD)
     const admin = await db
-      .collection("movies")
+      .collection("rental")
       .findOne({ email: req.body.email });
     if (admin) {
       const compare = await bcrypt.compare(req.body.password, admin.password);
